@@ -1163,8 +1163,15 @@
     }
   }
 
-  customElements.define("mw-humidifier-card", MwHumidifierCard);
-  customElements.define("mw-humidifier-card-editor", MwHumidifierCardEditor);
+  // guarda contra dupla definição: durante a troca de instalação manual para
+  // HACS os dois recursos convivem por um instante no Lovelace, e um segundo
+  // `define` do mesmo nome derruba o arquivo inteiro com NotSupportedError
+  if (!customElements.get("mw-humidifier-card")) {
+    customElements.define("mw-humidifier-card", MwHumidifierCard);
+  }
+  if (!customElements.get("mw-humidifier-card-editor")) {
+    customElements.define("mw-humidifier-card-editor", MwHumidifierCardEditor);
+  }
 
   window.customCards = window.customCards || [];
   window.customCards.push({

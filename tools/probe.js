@@ -31,7 +31,7 @@ global.HTMLElement = class {
   addEventListener() {}
 };
 const reg = {};
-global.customElements = { define: (n, c) => (reg[n] = c) };
+global.customElements = { define: (n, c) => (reg[n] = c), get: (n) => reg[n] };
 global.document = {
   body: { appendChild() {} },
   createElement: () => ({
