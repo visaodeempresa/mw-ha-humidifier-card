@@ -31,14 +31,24 @@ nada é compartilhado (ADR 0002) fora da paleta de papel, que é dado.
 - [x] Bancada visual em `memoria-ia/harness/` (ícones MDI de verdade).
 - [x] README com 6 exemplos, todos com `entity_id` reais.
 
-## Entrega 2 — DevOps (a pedido do dono, depois do teste na tela)
+## Entrega 2 — publicação (feita em 2026-08-07)
+
+- [x] Repositório público `visaodeempresa/mw-ha-humidifier-card`, `main` como
+      branch padrão.
+- [x] Release **v0.1.0** por tag assinada — o primeiro push de repositório
+      novo não dispara workflow (armadilha conhecida da família).
+- [x] Repositório personalizado no HACS (categoria `plugin` = Dashboard),
+      baixado, recurso Lovelace cadastrado pelo próprio HACS com `?hacstag=`.
+- [x] Instalação manual anterior (arquivos em `/config/www/community/` +
+      recurso `?v=0.1.0`) **removida** antes: dois recursos apontando para o
+      mesmo arquivo dariam dois `customElements.define` do mesmo nome.
+- [x] `customElements.define` protegido por `customElements.get` nos dois
+      componentes, para o caso de a sobreposição acontecer de novo.
+
+## Entrega 3 — DevOps (aguardando o ok do dono depois do teste na tela)
 
 - [ ] `IA/tools/mw-devops.sh apply mw-ha-humidifier-card`: CI (`node --check` +
-      probe), auto-release e probe headless nas branches de trabalho.
-- [ ] Repositório no GitHub (`visaodeempresa/mw-ha-humidifier-card`, público).
-- [ ] Primeira release por **tag assinada** — o primeiro push de repositório
-      novo não dispara workflow (armadilha conhecida da família).
-- [ ] Repositório personalizado no HACS + recurso Lovelace.
+      probe), auto-release e as regras do repositório no GitHub.
 
 ## Próximas (só com pedido do dono)
 
