@@ -1,0 +1,18 @@
+# ⬛️ ESCRITÓRIO — tudo que o aparelho expõe: nível de névoa e countdown são
+# `select` e viram botões que giram a cada toque, mostrando o valor curto.
+# A umidade do ambiente ganha uma linha própria dentro da tomada.
+type: custom:mw-humidifier-card
+name: ⬛️🔌💧 ESCRITÓRIO
+entity: switch.tomada_umidificador_escritorio_socket_1
+sensor_potencia: sensor.tomada_umidificador_escritorio_potencia
+humidity_entity: sensor.umidade_da_mesa_do_escritorio
+protocol_icon: mdi:wifi
+paper_color: blue-3
+button_columns: 3
+buttons:
+  - switch.escritorio_umidificador_escritorio_local_tomada
+  - select.escritorio_umidificador_escritorio_local_spraying_level
+  - switch.escritorio_umidificador_escritorio_local_led
+  - switch.escritorio_umidificador_escritorio_local_mute
+  - switch.escritorio_umidificador_escritorio_local_sleep
+  - select.escritorio_umidificador_escritorio_local_countdown

@@ -1,0 +1,17 @@
+# 🟧🧘🏻 SALA DE YOGA — a saída fica numa régua de 4 tomadas, que não mede
+# consumo por saída. Sem número para mostrar, o bloco de energia não existe;
+# a saída da régua entra como mais um botão (com ícone e nome à mão).
+type: custom:mw-humidifier-card
+mode: only_humidifier
+paper_color: orange-3
+button_columns: 3
+show_button_names: true
+buttons:
+  - entity: switch.tomadas_da_sala_de_yoga_umidificador
+    icon: mdi:power-plug
+    name: Régua
+  - switch.umidificador_da_sala_local_tomada
+  - select.umidificador_da_sala_spraying_level
+  - switch.umidificador_da_sala_local_led
+  - switch.umidificador_da_sala_local_mute
+  - switch.umidificador_da_sala_sleep

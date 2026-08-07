@@ -1,0 +1,14 @@
+# 🟧🪟 JANELA DA SALA — só a energia. `power_big: false` traz de volta as três
+# linhas do template original; cada uma usa a unidade da PRÓPRIA entidade
+# (esta tomada reporta corrente em A; as locais da Tuya reportam em mA).
+type: custom:mw-humidifier-card
+mode: only_power
+name: 🟧🔌💧🪟 JANELA DA SALA
+entity: switch.tomada_do_umidificador_da_janela_da_sala
+sensor_voltagem: sensor.tomada_do_umidificador_da_janela_da_sala_voltagem
+sensor_corrente: sensor.tomada_do_umidificador_da_janela_da_sala_corrente
+sensor_potencia: sensor.tomada_do_umidificador_da_janela_da_sala_potencia
+power_big: false
+humidity_entity: sensor.umidade_da_janela_da_sala
+protocol_icon: mdi:wifi
+paper_color: orange-3

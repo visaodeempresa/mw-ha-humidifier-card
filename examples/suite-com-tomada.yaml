@@ -1,0 +1,22 @@
+# 🟪 SUÍTE — o card da foto: tomada com potência em destaque + 4 botões.
+# Substitui a grade "power-button-card + 4 button-card" inteira, inclusive a
+# `visibility:` que escondia os botões com a tomada desligada.
+type: custom:mw-humidifier-card
+mode: with_power
+name: 🟪🔌💧
+entity: switch.tomada_umidificador_suite_local_tomada
+sensor_potencia: sensor.tomada_umidificador_suite_local_potencia
+device_icon: mdi:power
+background_image_url: >-
+  https://raw.githubusercontent.com/mayconsoftware/mayconsoftware.github.io/refs/heads/main/assets/devices/ha-integration/ha-integration-tuya.png
+protocol_icon: mdi:wifi
+protocol_offset_x: 11
+protocol_offset_y: 11
+power_lift: 12
+paper_color: violet-3
+confirm: true
+buttons:
+  - switch.suite_umidificador_da_suite_local_tomada
+  - switch.suite_umidificador_da_suite_local_led
+  - switch.suite_umidificador_da_suite_local_mute
+  - switch.suite_umidificador_da_suite_local_sleep

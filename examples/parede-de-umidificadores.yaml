@@ -1,0 +1,52 @@
+# Os quatro umidificadores da casa lado a lado, cada um no papel do seu
+# cômodo. `square: false` porque cada card já é 2:1 por conta própria.
+type: grid
+columns: 2
+square: false
+cards:
+  - type: custom:mw-humidifier-card
+    name: 🟪 SUÍTE
+    paper_color: violet-3
+    entity: switch.tomada_umidificador_suite_local_tomada
+    sensor_potencia: sensor.tomada_umidificador_suite_local_potencia
+    humidity_entity: sensor.umidade_media_da_area_da_suite
+    protocol_icon: mdi:wifi
+    buttons:
+      - switch.suite_umidificador_da_suite_local_tomada
+      - switch.suite_umidificador_da_suite_local_led
+      - switch.suite_umidificador_da_suite_local_mute
+      - switch.suite_umidificador_da_suite_local_sleep
+  - type: custom:mw-humidifier-card
+    name: ⬛️ ESCRITÓRIO
+    paper_color: blue-3
+    entity: switch.tomada_umidificador_escritorio_socket_1
+    sensor_potencia: sensor.tomada_umidificador_escritorio_potencia
+    humidity_entity: sensor.umidade_da_mesa_do_escritorio
+    protocol_icon: mdi:wifi
+    buttons:
+      - switch.escritorio_umidificador_escritorio_local_tomada
+      - switch.escritorio_umidificador_escritorio_local_led
+      - switch.escritorio_umidificador_escritorio_local_mute
+      - switch.escritorio_umidificador_escritorio_local_sleep
+  - type: custom:mw-humidifier-card
+    name: 🟧🪟 JANELA DA SALA
+    paper_color: orange-3
+    entity: switch.tomada_do_umidificador_da_janela_da_sala
+    sensor_potencia: sensor.tomada_do_umidificador_da_janela_da_sala_potencia
+    humidity_entity: sensor.umidade_da_janela_da_sala
+    protocol_icon: mdi:wifi
+    buttons:
+      - switch.umidificador_da_janela_da_sala_local_tomada
+      - switch.umidificador_da_janela_da_sala_local_led
+      - switch.umidificador_da_janela_da_sala_local_mute
+      - switch.umidificador_da_janela_da_sala_sleep
+  - type: custom:mw-humidifier-card
+    mode: only_humidifier
+    paper_color: orange-3
+    button_columns: 4
+    show_button_names: true
+    buttons:
+      - switch.tomadas_da_sala_de_yoga_umidificador
+      - switch.umidificador_da_sala_local_tomada
+      - switch.umidificador_da_sala_local_led
+      - switch.umidificador_da_sala_local_mute
