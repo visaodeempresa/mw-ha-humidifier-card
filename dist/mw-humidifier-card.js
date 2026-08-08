@@ -505,8 +505,15 @@
       }
 
       const css = `
+        /* line-height SEM unidade, obrigatoriamente: o frontend do HA define
+           --paper-font-body1_-_line-height: 20px no body, e line-height é
+           herdado. Um valor absoluto não encolhe com o card — a linha do nome
+           ficava travada em 20 px enquanto todo o resto diminuía, e a partir
+           de certa largura o conteúdo não cabia mais no quadrado e vazava
+           pela base. Sem unidade, cada elemento calcula a linha a partir do
+           PRÓPRIO font-size, que é proporcional ao tile. */
         .tile{position:relative;overflow:visible;border-radius:18px;padding:10%;
-          font-size:16px;text-transform:uppercase;box-sizing:border-box;
+          font-size:16px;line-height:1.15;text-transform:uppercase;box-sizing:border-box;
           background:${bg};border:1px solid ${border};box-shadow:${shadow};
           transition:background .3s ease,border-color .3s ease,box-shadow .3s ease;}
         .tgrid{display:grid;position:relative;height:100%;
@@ -517,7 +524,8 @@
         .stat{grid-area:status;align-self:start;justify-self:end;font-size:${cq(10)};font-weight:500;position:relative;z-index:1;}
         .nm{grid-area:n;font-weight:600;font-size:${cq(14)};color:${nameColor};align-self:center;justify-self:start;
           padding-top:${cq(6)};padding-bottom:${cq(6)};white-space:normal;word-wrap:break-word;text-align:left;
-          text-transform:none;position:relative;z-index:1;${liftCss}}
+          text-transform:none;position:relative;z-index:1;
+          display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;${liftCss}}
         /* text-transform:none na linha, não no card: o uppercase herdado do
            template original transformava "153 mA" em "153 MA" — miliampère
            vira megaampère, seis ordens de grandeza de diferença. */
@@ -624,7 +632,7 @@
            não pode mais empurrá-lo; e cqw deixa o texto proporcional ao
            quadrado, então cabe em qualquer largura de card */
         .btn{position:relative;aspect-ratio:1 / 1;container-type:size;min-width:0;min-height:0;
-          display:flex;flex-direction:column;
+          line-height:1.15;display:flex;flex-direction:column;
           align-items:center;justify-content:center;gap:2%;box-sizing:border-box;overflow:hidden;
           font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;
           touch-action:manipulation;transition:background .3s ease,box-shadow .3s ease,border-color .3s ease,color .3s ease;}
@@ -1222,7 +1230,7 @@
     documentationURL: "https://github.com/visaodeempresa/mw-ha-humidifier-card",
   });
 
-  console.info("%c MW-HUMIDIFIER-CARD %c 0.1.1 ",
+  console.info("%c MW-HUMIDIFIER-CARD %c 0.1.2 ",
     "background:#1a1a1a;color:#fdfaf3;font-weight:700;",
     "background:#8e7cc3;color:#1a1a1a;font-weight:700;");
 })();

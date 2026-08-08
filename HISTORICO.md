@@ -1,5 +1,33 @@
 # Histórico — mw-ha-humidifier-card
 
+## 2026-08-07 — v0.1.2: o `line-height` que o tema empurra para dentro
+
+Segundo teste na tela: o quadrado ficou (v0.1.1 resolveu), mas **o conteúdo
+passou a vazar pela base** — na foto do dono, a linha da potência (e, com
+`power_big: false`, a terceira linha de sensor) caía para fora do tile.
+
+Causa: o frontend do Home Assistant define
+`--paper-font-body1_-_line-height: 20px` no `body`, e `line-height` é
+**herdado** — atravessa o shadow DOM do card. Um valor **absoluto** não
+encolhe junto: o nome ficava com linha de 20 px enquanto todo o resto do tile
+diminuía com o card. Acima de certa largura sobra espaço e nada aparece; a
+partir de certa largura o conteúdo estoura o quadrado. Foi por isso que só
+apareceu na tela do dono (seção de ~350 px numa view `sections`) e nunca na
+bancada, que não herdava `line-height` nenhum.
+
+Correção: `line-height: 1.15` **sem unidade** no tile e no botão. Sem unidade,
+cada elemento calcula a própria linha a partir do seu `font-size`, que já é
+proporcional ao lado do quadrado — o conteúdo volta a ser uma fração fixa do
+tile (57% com a potência em destaque, 69% com V/A/W) em qualquer tamanho.
+
+De quebra, o nome ganhou limite de **duas linhas** (`-webkit-line-clamp`):
+nome comprido também não estoura mais o quadrado.
+
+A bancada passou a herdar `line-height: 32px; font-size: 20px` — o dobro do
+que o HA impõe — e ganhou os casos extremos: 180 px, 120 px e nome de 48
+caracteres. Doze arranjos, todos com o tile quadrado e o conteúdo dentro.
+**Conferência na tela é do dono.**
+
 ## 2026-08-07 — v0.1.1: o quadrado que não era quadrado
 
 Reportado pelo dono no primeiro teste na tela: **a tomada esticou**. Largura e

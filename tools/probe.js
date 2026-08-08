@@ -171,6 +171,25 @@ check("no tamanho de referência (236px) o cqw devolve o px de antes",
 check("o card é bloco (num pai flex não encolhe para o conteúdo)",
   wp.includes(":host{display:block"));
 
+// O frontend do HA define line-height ABSOLUTO no body
+// (--paper-font-body1_-_line-height: 20px) e line-height é herdado. Absoluto
+// não encolhe com o card: a linha do nome travava em 20px enquanto o resto
+// diminuía, e a partir de certa largura o conteúdo vazava pela base do
+// quadrado. Sem unidade, cada elemento calcula a linha pelo próprio
+// font-size, que é proporcional ao tile.
+check("tile fixa line-height SEM unidade (imune ao line-height do tema)",
+  /\.tile\{[^}]*line-height:1\.15;/.test(wp));
+check("botão do aparelho também fixa line-height sem unidade",
+  /\.btn\{[^}]*line-height:1\.15;/.test(wp));
+// tirar os comentários CSS antes: o próprio texto que explica a armadilha
+// cita "line-height: 20px" e daria falso positivo
+const semComentarios = wp.replace(/\/\*[\s\S]*?\*\//g, "");
+check("nenhum line-height em px em regra nenhuma",
+  !/line-height:\s*[\d.]+px/.test(semComentarios),
+  (semComentarios.match(/[^;{]*line-height:\s*[\d.]+px/) || [""])[0]);
+check("nome limitado a duas linhas — nome comprido não estoura o quadrado",
+  wp.includes("-webkit-line-clamp:2"));
+
 const single = html({ mode: "only_power", entity: SUITE.entity, sensor_potencia: SUITE.sensor_potencia });
 check("bloco único sem altura definida usa contenção só na largura",
   single.includes("container-type:inline-size"), "container-type:size exigiria altura definida");

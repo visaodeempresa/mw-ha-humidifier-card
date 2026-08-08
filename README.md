@@ -372,8 +372,11 @@ altura. Com a tomada desligada os botões somem e as duas colunas continuam lá:
 O quadrado é garantido por `container-type: size`: com contenção de tamanho o
 conteúdo **não pode** empurrar a altura do tile. E para que ele não vaze em vez
 de esticar, toda a tipografia de dentro é proporcional ao lado do quadrado
-(`cqw`), tomando 236 px como referência. Na prática: o card tem a mesma cara
-em 480 px e em 200 px de largura, e a tomada é quadrada em qualquer uma.
+(`cqw`), tomando 236 px como referência — inclusive o `line-height`, que é
+declarado **sem unidade** para não herdar o valor absoluto que o frontend do HA
+define no `body` (esse, por ser fixo, não encolheria junto). Na prática: o card
+tem a mesma cara em 480 px e em 120 px de largura, a tomada é quadrada em
+qualquer uma, e o conteúdo ocupa sempre a mesma fração dela.
 
 Nos modos de bloco único o card preenche o espaço que receber — use
 `square: true` na grade do Lovelace, ou a propriedade `height`.
@@ -382,7 +385,7 @@ Nos modos de bloco único o card preenche o espaço que receber — use
 
 ```bash
 node --check dist/mw-humidifier-card.js
-node tools/probe.js                 # 75 verificações, sem navegador
+node tools/probe.js                 # 79 verificações, sem navegador
 ```
 
 O probe instancia card e editor fora do browser com as entidades **reais** da
