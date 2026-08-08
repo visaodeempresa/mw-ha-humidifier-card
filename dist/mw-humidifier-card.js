@@ -128,6 +128,28 @@
     }
   };
 
+  /* Tipografia proporcional ao tile.
+   *
+   * O tile é um quadrado: `cqw` é 1% do lado dele. Tudo aqui dentro é
+   * expresso como fração desse lado, tomando 236 px (a metade de um card de
+   * 480) como referência — nos tamanhos de sempre nada muda de aparência, e
+   * num card estreito o conteúdo ENCOLHE em vez de exigir mais altura.
+   *
+   * Isso é o que garante o quadrado: com `container-type: size` no tile, o
+   * conteúdo não pode mais empurrar a altura; sem a tipografia proporcional,
+   * ele apenas vazaria para fora em vez de esticar.
+   *
+   * ARMADILHA: `cqw` só vale para DESCENDENTES do container. Escrito no
+   * próprio elemento que declara `container-type`, resolve contra o container
+   * ancestral — e, não havendo nenhum, contra o viewport. Foi assim que o
+   * `border-radius` do tile virou um círculo de 61 px. Por isso o raio, o
+   * padding e o font-size base do tile continuam em px/%. */
+  // 236 é o lado do tile (metade de um card de 480), mas `cqw` é 1% do
+  // CONTENT BOX do container — e o tile tem `padding: 10%` de cada lado.
+  // A referência, portanto, é 236 × 0,8. Errar isso encolhe tudo em 20%.
+  const REF = 236 * 0.8;
+  const cq = (px) => `${(Number(px) * 100 / REF).toFixed(2)}cqw`;
+
   // >>> paper-palette v1 — fonte canônica: /Volumes/SSD-T1-01/CLAUDE-SSD/IA/lib/paper-palette/paper-palette.js
   // 49 papéis encardidos: 7 matizes do arco-íris × 7 tons (1 = quase branco,
   // 7 = mais encardido). Saturação baixa de propósito — papel descansa a vista.
@@ -395,16 +417,16 @@
       if (c.image_url) {
         const f = isOff ? "filter:grayscale(40%) brightness(1.8);" : dead ? "filter:grayscale(100%);"
           : "filter:drop-shadow(0 1px 2px rgba(0,0,0,0.32)) drop-shadow(0 3px 5px rgba(0,0,0,0.18)) drop-shadow(0 5px 8px rgba(0,0,0,0.10));";
-        deviceImg = `<img src="${esc(c.image_url)}" alt="device" style="display:block;width:42px;height:42px;object-fit:contain;border-radius:6px;${anim}${opac}${f}transition:opacity .3s ease,filter .3s ease;">`;
+        deviceImg = `<img src="${esc(c.image_url)}" alt="device" style="display:block;width:${cq(42)};height:${cq(42)};object-fit:contain;border-radius:${cq(6)};${anim}${opac}${f}transition:opacity .3s ease,filter .3s ease;">`;
       } else if (c.device_icon) {
         const ic = isOn ? (c.color_on_name || "#1a1a1a") : (c.color_off_name || "rgba(255,255,255,0.5)");
         const f = isOn ? "filter:drop-shadow(0 1px 2px rgba(0,0,0,0.32)) drop-shadow(0 3px 5px rgba(0,0,0,0.18)) drop-shadow(0 5px 8px rgba(0,0,0,0.10));" : "";
-        deviceImg = `<ha-icon icon="${esc(c.device_icon)}" style="--mdc-icon-size:42px;width:42px;height:42px;color:${ic};display:flex;${anim}${opac}${f}transition:opacity .3s ease,color .3s ease;"></ha-icon>`;
+        deviceImg = `<ha-icon icon="${esc(c.device_icon)}" style="--mdc-icon-size:${cq(42)};width:${cq(42)};height:${cq(42)};color:${ic};display:flex;${anim}${opac}${f}transition:opacity .3s ease,color .3s ease;"></ha-icon>`;
       }
 
       let status;
       if (isOn || isOff) {
-        const knobLeft = isOn ? "26px" : "2px";
+        const knobLeft = isOn ? cq(26) : cq(2);
         if (c.control === false) {
           status = `<div class="tgl locked"><div class="track" style="background:${isOn ? "rgba(0,180,0,0.4)" : "rgba(100,100,100,0.4)"}"><div class="knob" style="left:${knobLeft};background:rgba(200,200,200,0.6);"></div></div></div>`;
         } else {
@@ -433,7 +455,7 @@
         const text = noReading(st.state) ? NO_READING
           : `${esc(fmtNumber(st.state, this._hass?.locale?.language))} ${esc(u)}`;
         return `<div class="row sensor" style="grid-area:${area}" data-entity="${esc(sensorId)}">
-          <ha-icon icon="${icon}" style="--mdc-icon-size:14px;width:14px;height:14px;color:${ic};"></ha-icon><span style="color:${tc};">${text}</span></div>`;
+          <ha-icon icon="${icon}" style="--mdc-icon-size:${cq(14)};width:${cq(14)};height:${cq(14)};color:${ic};"></ha-icon><span style="color:${tc};">${text}</span></div>`;
       };
 
       const powerColor = isOn ? c.color_power_on : c.color_power_off;
@@ -441,13 +463,13 @@
       const bigPower = () => {
         const st = this._st(c.sensor_potencia);
         if (!st) return `<div class="row" style="grid-area:power"></div>`;
-        const isz = Math.round(pSize * 0.62);
+        const isz = cq(Math.round(pSize * 0.62));
         const dash = noReading(st.state);
         const { value, unit } = dash
           ? { value: NO_READING, unit: "" }
           : fmtPower(st.state, st.attributes?.unit_of_measurement, this._hass?.locale?.language);
         return `<div class="row big sensor" style="grid-area:power" data-entity="${esc(c.sensor_potencia)}">
-          <ha-icon icon="mdi:flash" style="--mdc-icon-size:${isz}px;width:${isz}px;height:${isz}px;color:${powerColor};"></ha-icon
+          <ha-icon icon="mdi:flash" style="--mdc-icon-size:${isz};width:${isz};height:${isz};color:${powerColor};"></ha-icon
           ><span class="pv">${esc(value)}</span><span class="pu">${esc(unit)}</span></div>`;
       };
 
@@ -455,7 +477,7 @@
       // de margem — não mexe na grade, então o número não muda de tamanho.
       const lift = Number(c.power_lift);
       const liftCss = big && Number.isFinite(lift) && lift !== 0
-        ? `transform:translateY(${-lift}px);` : "";
+        ? `transform:translateY(-${cq(lift)});` : "";
 
       const hum = c.humidity_entity ? row(c.humidity_entity, "mdi:water-percent", "%", "humidity") : "";
       const areas = big
@@ -479,7 +501,7 @@
           : "none";
         const px = Number.isFinite(Number(c.protocol_offset_x)) ? Number(c.protocol_offset_x) : 10;
         const py = Number.isFinite(Number(c.protocol_offset_y)) ? Number(c.protocol_offset_y) : 10;
-        protocol = `<ha-icon class="proto" icon="${esc(c.protocol_icon)}" style="bottom:${py}px;right:${px}px;width:22px;height:22px;color:${pc};filter:${pf};"></ha-icon>`;
+        protocol = `<ha-icon class="proto" icon="${esc(c.protocol_icon)}" style="bottom:${cq(py)};right:${cq(px)};width:${cq(22)};height:${cq(22)};color:${pc};filter:${pf};"></ha-icon>`;
       }
 
       const css = `
@@ -492,34 +514,34 @@
         .wm{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;
           background-size:60%;background-position:center center;background-repeat:no-repeat;border-radius:inherit;}
         .dev{grid-area:device_img;justify-self:start;align-self:start;position:relative;z-index:1;line-height:0;overflow:visible;}
-        .stat{grid-area:status;align-self:start;justify-self:end;font-size:10px;font-weight:500;position:relative;z-index:1;}
-        .nm{grid-area:n;font-weight:600;font-size:14px;color:${nameColor};align-self:center;justify-self:start;
-          padding-top:6px;padding-bottom:6px;white-space:normal;word-wrap:break-word;text-align:left;
+        .stat{grid-area:status;align-self:start;justify-self:end;font-size:${cq(10)};font-weight:500;position:relative;z-index:1;}
+        .nm{grid-area:n;font-weight:600;font-size:${cq(14)};color:${nameColor};align-self:center;justify-self:start;
+          padding-top:${cq(6)};padding-bottom:${cq(6)};white-space:normal;word-wrap:break-word;text-align:left;
           text-transform:none;position:relative;z-index:1;${liftCss}}
         /* text-transform:none na linha, não no card: o uppercase herdado do
            template original transformava "153 mA" em "153 MA" — miliampère
            vira megaampère, seis ordens de grandeza de diferença. */
-        .row{padding-bottom:4px;align-self:center;justify-self:start;font-size:10px;font-weight:500;
-          position:relative;z-index:1;display:inline-flex;align-items:center;gap:5px;
+        .row{padding-bottom:${cq(4)};align-self:center;justify-self:start;font-size:${cq(10)};font-weight:500;
+          position:relative;z-index:1;display:inline-flex;align-items:center;gap:${cq(5)};
           text-transform:none;}
         .row ha-icon{flex:none;line-height:0;display:flex;align-items:center;}
         .row.sensor{cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
-        .row.big{gap:6px;align-items:baseline;padding-bottom:2px;${liftCss}}
+        .row.big{gap:${cq(6)};align-items:baseline;padding-bottom:${cq(2)};${liftCss}}
         .row.big ha-icon{align-self:center;flex:none;
           filter:${isOn ? "drop-shadow(0 1px 0 rgba(255,255,255,0.55))" : "none"};}
         /* tabular-nums trava a largura do dígito: o número não dança a cada leitura */
-        .row.big .pv{font-size:${pSize}px;font-weight:700;line-height:1.05;color:${powerColor};
+        .row.big .pv{font-size:${cq(pSize)};font-weight:700;line-height:1.05;color:${powerColor};
           font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;letter-spacing:-0.5px;
           text-shadow:${isOn ? "0 1px 0 rgba(255,255,255,0.55)" : "none"};}
-        .row.big .pu{font-size:${Math.round(pSize * 0.4)}px;font-weight:600;color:${powerColor};
+        .row.big .pu{font-size:${cq(Math.round(pSize * 0.4))};font-weight:600;color:${powerColor};
           opacity:.72;letter-spacing:0;}
-        .tile span{font-size:12px;font-weight:500;line-height:1.4;}
+        .tile span{font-size:${cq(12)};font-weight:500;line-height:1.4;}
         .proto{position:absolute;z-index:2;pointer-events:none;line-height:0;}
         .tgl{display:inline-flex;align-items:center;}
         .tgl.live{cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
         .tgl.locked{cursor:not-allowed;opacity:0.35;}
-        .track{width:48px;height:24px;border-radius:12px;position:relative;transition:background .3s;pointer-events:none;}
-        .knob{width:20px;height:20px;border-radius:50%;position:absolute;top:2px;transition:left .3s;pointer-events:none;}
+        .track{width:${cq(48)};height:${cq(24)};border-radius:${cq(12)};position:relative;transition:background .3s;pointer-events:none;}
+        .knob{width:${cq(20)};height:${cq(20)};border-radius:50%;position:absolute;top:${cq(2)};transition:left .3s;pointer-events:none;}
         @keyframes mhc-spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}`;
 
       const html = `
@@ -596,14 +618,19 @@
 
       const cols = Math.max(1, Number(c.button_columns) || 2);
       const css = `
-        .btns{display:grid;grid-template-columns:repeat(${cols},1fr);gap:${Number(c.gap) || 0}px;align-content:start;}
-        .btn{position:relative;aspect-ratio:1 / 1;display:flex;flex-direction:column;
-          align-items:center;justify-content:center;gap:2px;box-sizing:border-box;overflow:hidden;
-          font-size:11px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;
+        .btns{display:grid;grid-template-columns:repeat(${cols},1fr);gap:${Number(c.gap) || 0}px;
+          align-content:start;min-width:0;min-height:0;}
+        /* container-type:size + aspect-ratio = o botão é quadrado e o rótulo
+           não pode mais empurrá-lo; e cqw deixa o texto proporcional ao
+           quadrado, então cabe em qualquer largura de card */
+        .btn{position:relative;aspect-ratio:1 / 1;container-type:size;min-width:0;min-height:0;
+          display:flex;flex-direction:column;
+          align-items:center;justify-content:center;gap:2%;box-sizing:border-box;overflow:hidden;
+          font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;
           touch-action:manipulation;transition:background .3s ease,box-shadow .3s ease,border-color .3s ease,color .3s ease;}
-        .btn ha-icon{display:flex;align-items:center;justify-content:center;
+        .btn ha-icon{display:flex;align-items:center;justify-content:center;flex:none;
           transition:color .3s ease,filter .3s ease;}
-        .btn .bn{font-size:11px;font-weight:600;line-height:1.1;max-width:92%;text-align:center;
+        .btn .bn{font-size:10cqw;font-weight:600;line-height:1.1;max-width:92%;text-align:center;
           overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}`;
 
       return { css, html: `<div class="btns">${cells}</div>` };
@@ -628,14 +655,27 @@
 
       const twoUp = withPower && withButtons;
       const heightCss = c.height ? `height:${esc(c.height)};` : "";
-      // no modo com tomada a proporção 1:1 do bloco da esquerda é quem define a
+      // No modo com tomada a proporção 1:1 do bloco da esquerda é quem define a
       // altura do card — as duas colunas 1fr fazem os quatro botões fecharem
-      // exatamente a mesma altura. Nos modos de bloco único, o card preenche.
-      const tileShape = twoUp ? "aspect-ratio:1 / 1;" : "height:100%;";
+      // exatamente a mesma altura.
+      //
+      // `container-type:size` é o que TRAVA o quadrado: com contenção de
+      // tamanho, o conteúdo não pode mais empurrar a altura. Sem ela, um card
+      // estreito (o conteúdo pedindo mais do que o lado do quadrado) fazia o
+      // tile esticar e desalinhar da grade de botões. `min-height:0` desarma o
+      // tamanho mínimo automático que todo item de grade carrega.
+      // Nos modos de bloco único não há com o que alinhar: o tile preenche o
+      // que receber, e a contenção fica só no eixo horizontal.
+      const tileShape = twoUp
+        ? "aspect-ratio:1 / 1;container-type:size;min-width:0;min-height:0;align-self:start;"
+        : `height:100%;container-type:${c.height ? "size" : "inline-size"};min-width:0;`;
 
       if (!this.shadowRoot) this.attachShadow({ mode: "open" });
       this.shadowRoot.innerHTML = `
         <style>
+          /* o elemento custom nasce inline: num pai flex ele encolheria para o
+             conteúdo. Card é bloco, e ocupa a largura que recebe. */
+          :host{display:block;width:100%;box-sizing:border-box;}
           ha-card{font-family:'Graphik',sans-serif;background:none;border:none;box-shadow:none;
             padding:0;overflow:visible;${heightCss}}
           .wrap{display:grid;gap:${Number(c.gap) || 0}px;align-items:start;
@@ -1182,7 +1222,7 @@
     documentationURL: "https://github.com/visaodeempresa/mw-ha-humidifier-card",
   });
 
-  console.info("%c MW-HUMIDIFIER-CARD %c 0.1.0 ",
+  console.info("%c MW-HUMIDIFIER-CARD %c 0.1.1 ",
     "background:#1a1a1a;color:#fdfaf3;font-weight:700;",
     "background:#8e7cc3;color:#1a1a1a;font-weight:700;");
 })();

@@ -27,7 +27,7 @@ nada é compartilhado (ADR 0002) fora da paleta de papel, que é dado.
       umidificador → botões (seletor múltiplo filtrado), 3 seções expansíveis
       e a seção de cores com alfa.
 - [x] Editor preserva a forma longa `{entity, icon, name}` escrita à mão.
-- [x] Probe headless (66 verificações) com as entidades reais da casa.
+- [x] Probe headless (75 verificações) com as entidades reais da casa.
 - [x] Bancada visual em `memoria-ia/harness/` (ícones MDI de verdade).
 - [x] README com 6 exemplos, todos com `entity_id` reais.
 

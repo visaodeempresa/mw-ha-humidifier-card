@@ -148,6 +148,35 @@ check("potência em destaque (22,7)", wp.includes(">22,7<"));
 check("unidade W ao lado do número", wp.includes('class="pu">W<'));
 check("V e A escondidos com a potência em destaque",
   !wp.includes("mdi:lightning-bolt") && !wp.includes("mdi:current-ac"));
+
+// --- o quadrado (regressão de 07/08: no HA o tile esticava e desalinhava) ---
+const tileRule = wp.slice(wp.indexOf(".tile{"), wp.indexOf(".tgrid{"));
+check("tile com contenção de tamanho — conteúdo não empurra a altura",
+  wp.includes("container-type:size"));
+check("tile com aspect-ratio 1/1 e min-height:0",
+  wp.includes("aspect-ratio:1 / 1") && wp.includes("min-height:0"));
+check("botão do aparelho também é container quadrado",
+  wp.includes(".btn{position:relative;aspect-ratio:1 / 1;container-type:size"));
+// ARMADILHA: cqw escrito no PRÓPRIO container resolve contra o viewport —
+// foi assim que o border-radius do tile virou um círculo de 61 px
+check("nenhuma unidade de container na regra do próprio .tile",
+  !/cqw/.test(tileRule), tileRule.slice(0, 160));
+check("tipografia interna proporcional ao tile (cqw nos descendentes)",
+  /\.nm\{[^}]*font-size:[\d.]+cqw/.test(wp) && /\.row\{[^}]*font-size:[\d.]+cqw/.test(wp));
+// cqw é 1% do CONTENT BOX, e o tile tem padding:10% de cada lado — a
+// referência é 236 × 0,8. Com a referência errada tudo encolhe 20%.
+check("no tamanho de referência (236px) o cqw devolve o px de antes",
+  wp.includes("font-size:7.42cqw") && wp.includes("width:25.42cqw"),
+  "14px -> 7.42cqw e 48px -> 25.42cqw");
+check("o card é bloco (num pai flex não encolhe para o conteúdo)",
+  wp.includes(":host{display:block"));
+
+const single = html({ mode: "only_power", entity: SUITE.entity, sensor_potencia: SUITE.sensor_potencia });
+check("bloco único sem altura definida usa contenção só na largura",
+  single.includes("container-type:inline-size"), "container-type:size exigiria altura definida");
+const singleH = html({ mode: "only_power", entity: SUITE.entity, sensor_potencia: SUITE.sensor_potencia, height: "240px" });
+check("bloco único COM altura definida pode conter os dois eixos",
+  singleH.includes("container-type:size"));
 check("marca d'água desenhada", wp.includes('class="wm"'));
 check("selinho de protocolo", wp.includes("mdi:wifi"));
 check("quatro botões", (wp.match(/class="btn"/g) || []).length === 4);

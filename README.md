@@ -369,6 +369,12 @@ No `with_power` as duas colunas são iguais (`1fr 1fr`) e o bloco da tomada é
 altura. Com a tomada desligada os botões somem e as duas colunas continuam lá:
 **a altura do card não muda**, e a parede de umidificadores não dança.
 
+O quadrado é garantido por `container-type: size`: com contenção de tamanho o
+conteúdo **não pode** empurrar a altura do tile. E para que ele não vaze em vez
+de esticar, toda a tipografia de dentro é proporcional ao lado do quadrado
+(`cqw`), tomando 236 px como referência. Na prática: o card tem a mesma cara
+em 480 px e em 200 px de largura, e a tomada é quadrada em qualquer uma.
+
 Nos modos de bloco único o card preenche o espaço que receber — use
 `square: true` na grade do Lovelace, ou a propriedade `height`.
 
@@ -376,7 +382,7 @@ Nos modos de bloco único o card preenche o espaço que receber — use
 
 ```bash
 node --check dist/mw-humidifier-card.js
-node tools/probe.js                 # 66 verificações, sem navegador
+node tools/probe.js                 # 75 verificações, sem navegador
 ```
 
 O probe instancia card e editor fora do browser com as entidades **reais** da

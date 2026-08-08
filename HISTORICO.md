@@ -1,5 +1,44 @@
 # Histórico — mw-ha-humidifier-card
 
+## 2026-08-07 — v0.1.1: o quadrado que não era quadrado
+
+Reportado pelo dono no primeiro teste na tela: **a tomada esticou**. Largura e
+altura deixaram de ser iguais e o bloco de botões ao lado ficou desalinhado.
+
+Não reproduzia na bancada a 480 px — só num card estreito. A causa: o tile é
+item de grade, e todo item de grade carrega `min-height: auto` (o tamanho
+mínimo automático). Num card largo o conteúdo cabia dentro do quadrado e o
+`aspect-ratio` mandava; num card estreito o conteúdo passava a pedir mais
+altura do que o lado do quadrado, o mínimo automático vencia o `aspect-ratio`
+e o tile crescia.
+
+Correção em duas partes, porque uma sozinha não resolve:
+
+1. **`container-type: size` no tile** (mais `min-height: 0`). Com contenção de
+   tamanho, o conteúdo não pode mais influenciar a altura: o `aspect-ratio` é
+   a única palavra. Só isso, porém, faria o conteúdo *vazar* para fora em vez
+   de esticar — o que é igualmente feio.
+2. **Tipografia proporcional ao tile**, em `cqw`. Tudo lá dentro passou a ser
+   fração do lado do quadrado, tomando 236 px (a metade de um card de 480)
+   como referência: nos tamanhos de sempre nada muda de aparência, e num card
+   estreito o conteúdo encolhe junto em vez de exigir espaço. O botão do
+   aparelho ganhou o mesmo tratamento.
+
+Duas armadilhas que custaram descoberta, as duas já viradas verificação:
+
+- **`cqw` no PRÓPRIO container resolve contra outro container** (ou contra o
+  viewport, não havendo nenhum). O `border-radius: 7.63cqw` do tile virou um
+  círculo de 61 px. Raio, padding e font-size base do tile ficaram em px/%.
+- **`cqw` é 1% do CONTENT BOX**, e o tile tem `padding: 10%` de cada lado. A
+  referência é 236 × 0,8 = 188,8. Com 236, tudo saía 20% menor.
+
+De quebra, `:host{display:block}` — o elemento custom nasce inline e num pai
+flex encolhia para o conteúdo.
+
+Verificado na bancada em 7 arranjos (largura solta, pai de altura fixa, tema
+com `ha-card{height:100%}`, pai flex, e cards de 293 e 200 px): tile quadrado
+e da mesma altura do bloco de botões em todos. **Conferência na tela é do dono.**
+
 ## 2026-08-07 — nascimento (v0.1.0)
 
 Pedido: «tenho um umidificador inteligente conectado em uma tomada
