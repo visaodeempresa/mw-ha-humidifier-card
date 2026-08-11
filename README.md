@@ -1,3 +1,13 @@
+<!-- MW-BRAND:BEGIN — gerado por IA/tools/mw-brand.sh · não editar à mão -->
+<p align="center">
+  <a href="https://github.com/visaodeempresa">
+    <img src="docs/brand/logo.png" alt="Visão de Empresa — MAYCON WILLIAN OLIVEIRA" width="96">
+  </a>
+  <br>
+  <sub><b>Visão de Empresa</b> · componente de Home Assistant por MAYCON WILLIAN OLIVEIRA</sub>
+</p>
+<!-- MW-BRAND:END -->
+
 # MW Humidifier Card
 
 [![HACS](https://img.shields.io/badge/HACS-Dashboard-41BDF5.svg)](https://hacs.xyz)
