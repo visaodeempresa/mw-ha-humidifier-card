@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" width="100%" height="100%">
+  <defs>
+    <!-- Definição das cores baseadas na imagem -->
+    <style>
+      .red-part { fill: #E13524; }
+      .blue-part { fill: #41657E; }
+    </style>
+  </defs>
+
+  <!-- Barra Esquerda (Vermelha) -->
+  <path class="red-part" d="M 5,5 
+           L 30,5 
+           L 63,98 
+           Q 65,105 58,110 
+           Q 53,113 48,105 
+           Z" 
+        stroke-linejoin="round" />
+
+  <!-- Barra Central (Azul) -->
+  <polygon class="blue-part" points="38,5 60,5 83,75 61,75" stroke-linejoin="round" />
+
+  <!-- Triângulo Direito (Azul) -->
+  <polygon class="blue-part" points="68,5 90,5 100,35 78,35" stroke-linejoin="round" />
+</svg>
