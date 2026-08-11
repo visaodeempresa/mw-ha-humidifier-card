@@ -1,0 +1,54 @@
+# CI — card/elemento de arquivo único, sem build: a verificação é sintaxe +
+# probe headless (instancia o componente e o editor fora do navegador).
+# Roda nas branches de trabalho e em todo PR que aponta para a main.
+#
+# GERADO por IA/tools/mw-devops.sh — não editar à mão.
+# Fonte canônica: IA/lib/mw-devops/templates/ci.yml
+name: CI
+
+on:
+  push:
+    branches:
+      - "feature/**"
+      - "fix/**"
+      - "chore/**"
+      - develop
+      - release
+  pull_request:
+    branches: [develop, release, main]
+
+jobs:
+  check:
+    name: Sintaxe & probe
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Sintaxe
+        run: node --check dist/mw-humidifier-card.js
+
+      - name: Probe headless (componente + editor)
+        run: node tools/probe.js
+
+      - name: hacs.json aponta para o arquivo que existe
+        run: |
+          set -euo pipefail
+          F=$(node -p "require('./hacs.json').filename")
+          test -f "dist/$F"
+
+      - name: A versão vive onde o release vai procurar
+        # trava a armadilha do sed que vira no-op silencioso no auto-release
+        run: |
+          set -euo pipefail
+          grep -qE '%c v?[0-9]+\.[0-9]+\.[0-9]+ ' dist/mw-humidifier-card.js
+
+      - name: Artefato para inspeção
+        uses: actions/upload-artifact@v4
+        with:
+          name: mw-humidifier-card
+          path: dist/mw-humidifier-card.js
+          retention-days: 7

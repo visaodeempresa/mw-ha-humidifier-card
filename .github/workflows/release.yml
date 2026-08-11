@@ -1,0 +1,38 @@
+# Fallback manual: push de tag v* → anexa o JS na Release daquela tag.
+# O caminho normal é o auto-release.yml (merge na main). Este existe para
+# republicar um asset ou marcar uma versão à mão sem tocar na main.
+#
+# GERADO por IA/tools/mw-devops.sh — não editar à mão.
+# Fonte canônica: IA/lib/mw-devops/templates/release.yml
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  release:
+    name: Publish asset
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Sanity (sintaxe + probe)
+        run: |
+          node --check dist/mw-humidifier-card.js
+          node tools/probe.js
+
+      - name: Upload asset to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: dist/mw-humidifier-card.js
+          asset_name: mw-humidifier-card.js
+          tag: ${{ github.ref }}
+          overwrite: true
