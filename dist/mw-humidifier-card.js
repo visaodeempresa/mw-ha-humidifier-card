@@ -1230,7 +1230,7 @@
     documentationURL: "https://github.com/visaodeempresa/mw-ha-humidifier-card",
   });
 
-  console.info("%c MW-HUMIDIFIER-CARD %c 0.1.2 ",
+  console.info("%c MW-HUMIDIFIER-CARD %c 0.1.3 ",
     "background:#1a1a1a;color:#fdfaf3;font-weight:700;",
     "background:#8e7cc3;color:#1a1a1a;font-weight:700;");
 })();
