@@ -111,7 +111,7 @@ entity: switch.tomada_umidificador_suite_local_tomada
 sensor_potencia: sensor.tomada_umidificador_suite_local_potencia
 device_icon: mdi:power
 background_image_url: >-
-  https://raw.githubusercontent.com/mayconsoftware/mayconsoftware.github.io/refs/heads/main/assets/devices/ha-integration/ha-integration-tuya.png
+  https://mayconsoftware.github.io/assets/devices/ha-integration/ha-integration-tuya.png
 protocol_icon: mdi:wifi
 protocol_offset_x: 11
 protocol_offset_y: 11

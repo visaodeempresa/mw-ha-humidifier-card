@@ -19,9 +19,25 @@
 (() => {
   "use strict";
 
+  // Marcas d'água servidas pelo site (mesmo host da logo da marca), não mais
+  // pelo raw.githubusercontent — que é interface de código, não CDN de asset.
   const PRESET_URLS = {
-    tuya: "https://raw.githubusercontent.com/mayconsoftware/mayconsoftware.github.io/refs/heads/main/assets/devices/ha-integration/ha-integration-tuya.png",
-    tapo: "https://raw.githubusercontent.com/mayconsoftware/mayconsoftware.github.io/refs/heads/main/assets/devices/ha-integration/ha-integration-tapo.png",
+    tuya: "https://mayconsoftware.github.io/assets/devices/ha-integration/ha-integration-tuya.png",
+    tapo: "https://mayconsoftware.github.io/assets/devices/ha-integration/ha-integration-tapo.png",
+  };
+
+  // Endereços antigos gravados no YAML de quem já usa o card: reescritos ao
+  // ler a configuração, senão o editor mostraria «Custom» num card que o dono
+  // configurou como Tuya/Tapo. URL de terceiro passa intacta.
+  const LEGACY_PRESET_URLS = {
+    "https://raw.githubusercontent.com/mayconsoftware/mayconsoftware.github.io/refs/heads/main/assets/devices/ha-integration/ha-integration-tuya.png": PRESET_URLS.tuya,
+    "https://raw.githubusercontent.com/mayconsoftware/mayconsoftware.github.io/refs/heads/main/assets/devices/ha-integration/ha-integration-tapo.png": PRESET_URLS.tapo,
+  };
+
+  const migrateBg = (config) => {
+    const url = config?.background_image_url;
+    const next = url && LEGACY_PRESET_URLS[url];
+    return next ? { ...config, background_image_url: next } : config;
   };
 
   const MODES = ["with_power", "only_humidifier", "only_power"];
@@ -323,7 +339,7 @@
   class MwHumidifierCard extends HTMLElement {
     setConfig(config) {
       if (!config) throw new Error("mw-humidifier-card: configuração vazia");
-      const cfg = { ...DEFAULTS, ...config };
+      const cfg = { ...DEFAULTS, ...migrateBg(config) };
       if (!MODES.includes(cfg.mode)) cfg.mode = DEFAULTS.mode;
       cfg.buttons = normalizeButtons(cfg.buttons);
       if (cfg.mode !== "only_humidifier" && !cfg.entity) {
@@ -934,7 +950,7 @@
 
   class MwHumidifierCardEditor extends HTMLElement {
     setConfig(config) {
-      this._config = { ...config, buttons: normalizeButtons(config.buttons) };
+      this._config = { ...migrateBg(config), buttons: normalizeButtons(config.buttons) };
       this._renderForm();
     }
     set hass(hass) {

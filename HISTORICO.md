@@ -1,5 +1,19 @@
 # Histórico — mw-ha-humidifier-card
 
+## 2026-08-15 — marca d'água servida pelo site (feature/preset-urls-pages)
+
+Os presets **Tuya** e **Tapo** passam a gravar
+`https://mayconsoftware.github.io/assets/devices/ha-integration/...` — o mesmo
+host da logo da marca — no lugar do `raw.githubusercontent.com/...`, que é
+interface de código, não CDN de asset.
+
+`migrateBg()` reescreve os dois endereços antigos ao ler a configuração, no
+card e no editor: quem já tem a tomada configurada como Tuya continua vendo
+«Tuya» no editor em vez de cair para «Custom». URL de terceiro passa intacta e
+o YAML salvo só muda quando o dono mexer no card.
+
+Mesma mudança feita no `mw-ha-power-button-card`. Probe: 7 checks novos.
+
 ## 2026-08-07 — v0.1.2: o `line-height` que o tema empurra para dentro
 
 Segundo teste na tela: o quadrado ficou (v0.1.1 resolveu), mas **o conteúdo
