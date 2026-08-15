@@ -431,5 +431,30 @@ check("ordem canônica: tomada primeiro, sono por último",
   /_tomada$/.test(swapped[0].buttons[0]) && /_sleep$/.test(swapped[0].buttons[3]),
   JSON.stringify(swapped[0].buttons));
 
+console.log("marca d'água servida pelo site:");
+const PAGES_WM = "https://mayconsoftware.github.io/assets/devices/ha-integration";
+const RAW_WM = "https://raw.githubusercontent.com/mayconsoftware/mayconsoftware.github.io/refs/heads/main/assets/devices/ha-integration";
+const cardSrc = fs.readFileSync(path.join(__dirname, "..", "dist", "mw-humidifier-card.js"), "utf8");
+check("presets apontam para o site",
+  cardSrc.includes(`${PAGES_WM}/ha-integration-tuya.png`) &&
+  cardSrc.includes(`${PAGES_WM}/ha-integration-tapo.png`));
+
+for (const marca of ["tuya", "tapo"]) {
+  const velho = `${RAW_WM}/ha-integration-${marca}.png`;
+  const novo = `${PAGES_WM}/ha-integration-${marca}.png`;
+  const h = html({ ...SUITE, background_image_url: velho });
+  check(`URL antiga de ${marca} desenha a do site`, h.includes(novo) && !h.includes(velho));
+  const e = new reg["mw-humidifier-card-editor"]();
+  e.hass = hass;
+  e.setConfig({ ...SUITE, background_image_url: velho });
+  check(`editor reconhece a URL antiga de ${marca} como preset`, e._preset() === marca);
+}
+const outraMarca = "https://exemplo.invalido/minha-marca.png";
+const edOutraMarca = new reg["mw-humidifier-card-editor"]();
+edOutraMarca.hass = hass;
+edOutraMarca.setConfig({ ...SUITE, background_image_url: outraMarca });
+check("URL de terceiro passa intacta (Custom)",
+  edOutraMarca._preset() === "custom" && edOutraMarca._config.background_image_url === outraMarca);
+
 console.log(fails ? `\n${fails} verificação(ões) falharam` : "\ntudo ok");
 process.exit(fails ? 1 : 0);
